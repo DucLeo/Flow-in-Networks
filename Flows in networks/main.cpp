@@ -6,30 +6,29 @@ int main()
 	net.takeData("file.txt");
 	cout << "Original data after processing data from file, list of arcs:\n";
 	cout << "Format: [starting] [destination] [flow] [throughput]\n\n";
-	EoList<Vertex*>* cur = net.listVertexes->head;
-	while (cur != NULL) {
-		EoList<Arc*>* tmp = cur->data->goNextBy->head;
-		while (tmp != NULL) {
-			cout << tmp->data->starting << " " << tmp->data->destination << " " << tmp->data->flow << " " << tmp->data->throughput << endl;
-			tmp = tmp->next;
+	EoList<Vertex*>* curVertex = net.listVertexes->head;
+	while (curVertex != NULL) {
+		EoList<Arc*>* curArc = curVertex->data->goNextBy->head;
+		while (curArc != NULL) {
+			cout << curArc->data->starting << " " << curArc->data->destination << " " << curArc->data->flow << " " << curArc->data->throughput << endl;
+			curArc = curArc->next;
 		}
-		cur = cur->next;
+		curVertex = curVertex->next;
 	}
 
 	net.FordFulkerson();
 
 	cout << "\n\nList of edges after implementing Ford-Fulkerson's algorithm:\n";
 	cout << "Format: [starting] [destination] [flow] [throughput]\n\n";
-	cur = net.listVertexes->head;
-	while (cur != NULL) {
-		EoList<Arc*>* tmp = cur->data->goNextBy->head;
-		while (tmp != NULL) {
-			cout << tmp->data->starting << " " << tmp->data->destination << " " << tmp->data->flow << " " << tmp->data->throughput << endl;
-			tmp = tmp->next;
+	curVertex = net.listVertexes->head;
+	while (curVertex != NULL) {
+		EoList<Arc*>* curArc = curVertex->data->goNextBy->head;
+		while (curArc != NULL) {
+			cout << curArc->data->starting << " " << curArc->data->destination << " " << curArc->data->flow << " " << curArc->data->throughput << endl;
+			curArc = curArc->next;
 		}
-		cur = cur->next;
+		curVertex = curVertex->next;
 	}
 
 	cout << "\n\nThe MAX flow: " << net.maxFlow() << endl;
-	
 }

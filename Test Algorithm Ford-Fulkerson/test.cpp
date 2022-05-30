@@ -38,7 +38,32 @@ TEST(Test_HardNet) {
 	ASSERT_EQ(net.maxFlow(), 23);
 }
 
-TEST(Test_MediumNet) {
+TEST(Test_MediumNet1) {
+	TransportNetwork net = TransportNetwork();
+	net.insertArc(new Arc('S', 'B', 14));
+	net.insertArc(new Arc('S', 'C', 15));
+	net.insertArc(new Arc('S', 'D', 9));
+	net.insertArc(new Arc('B', 'E', 4));
+	net.insertArc(new Arc('B', 'F', 7));
+	net.insertArc(new Arc('C', 'F', 8));
+	net.insertArc(new Arc('C', 'G', 9));
+	net.insertArc(new Arc('D', 'G', 8));
+	net.insertArc(new Arc('E', 'H', 9));
+	net.insertArc(new Arc('E', 'I', 3));
+	net.insertArc(new Arc('F', 'I', 10));
+	net.insertArc(new Arc('G', 'I', 4));
+	net.insertArc(new Arc('G', 'J', 9));
+	net.insertArc(new Arc('H', 'T', 17));
+	net.insertArc(new Arc('I', 'T', 21));
+	net.insertArc(new Arc('J', 'T', 13));
+
+	ASSERT_EQ(net.maxFlow(), 0);
+
+	net.FordFulkerson();
+	ASSERT_EQ(net.maxFlow(), 27);
+}
+
+TEST(Test_MediumNet2) {
 	TransportNetwork net = TransportNetwork();
 	net.insertArc(new Arc('S', 'B', 19));
 	net.insertArc(new Arc('S', 'C', 14));
@@ -63,4 +88,32 @@ TEST(Test_MediumNet) {
 
 	net.FordFulkerson();
 	ASSERT_EQ(net.maxFlow(), 34);
+}
+
+
+TEST(Test_MediumNet3) {
+	TransportNetwork net = TransportNetwork();
+	net.insertArc(new Arc('S', 'B', 10));
+	net.insertArc(new Arc('S', 'C', 21));
+	net.insertArc(new Arc('S', 'D', 14));
+	net.insertArc(new Arc('B', 'E', 9));
+	net.insertArc(new Arc('B', 'F', 2));
+	net.insertArc(new Arc('C', 'E', 10));
+	net.insertArc(new Arc('C', 'G', 10));
+	net.insertArc(new Arc('D', 'F', 7));
+	net.insertArc(new Arc('D', 'G', 2));
+	net.insertArc(new Arc('E', 'H', 4));
+	net.insertArc(new Arc('E', 'I', 5));
+	net.insertArc(new Arc('F', 'H', 10));
+	net.insertArc(new Arc('F', 'J', 3));
+	net.insertArc(new Arc('G', 'I', 4));
+	net.insertArc(new Arc('G', 'J', 8));
+	net.insertArc(new Arc('H', 'T', 10));
+	net.insertArc(new Arc('I', 'T', 10));
+	net.insertArc(new Arc('J', 'T', 16));
+
+	ASSERT_EQ(net.maxFlow(), 0);
+
+	net.FordFulkerson();
+	ASSERT_EQ(net.maxFlow(), 30);
 }

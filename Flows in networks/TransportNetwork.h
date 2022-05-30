@@ -10,10 +10,10 @@ public:
 	unsigned int throughput;
 	unsigned int flow;
 	
-	Arc(char v1, char v2, unsigned int tp) {
+	Arc(char v1, char v2, unsigned int throughput) {
 		this->starting = v1;
 		this->destination = v2;
-		this->throughput = tp;
+		this->throughput = throughput;
 		this->flow = 0;
 	}
 	
@@ -30,8 +30,8 @@ public:
 	char symbol;
 	List<Arc*>* goNextBy;
 
-	Vertex(char v) {
-		this->symbol = v;
+	Vertex(char nameVertex) {
+		this->symbol = nameVertex;
 		this->goNextBy = new List<Arc*>();
 	}
 	Vertex() {
@@ -42,11 +42,11 @@ public:
 
 class TransportNetwork {
 private:
-	Vertex* getVertex(char v) {
+	Vertex* getVertex(char nameVertex) {
 		Vertex* result = new Vertex();
 		EoList<Vertex*>* cur = listVertexes->head;
 		while (cur != NULL) {
-			if (cur->data->symbol == v) result = cur->data;
+			if (cur->data->symbol == nameVertex) result = cur->data;
 			cur = cur->next;
 		}
 		if (result->symbol == NULL) throw logic_error("Not this vertex in network!");
@@ -104,33 +104,32 @@ private:
 	List<Arc*>* getTransportPath() {
 		List<char>* impossibleVertices = new List<char>;
 		List<Arc*>* result = new List<Arc*>();
-		Vertex* cur = source;
-		impossibleVertices->pushback(cur->symbol);
-		while (cur != stock) {
-			if (cur->goNextBy->head == NULL) {
+		Vertex* curVertex = source;
+		impossibleVertices->pushback(curVertex->symbol);
+		while (curVertex != stock) {
+			if (curVertex->goNextBy->head == NULL) {
 
-				if (cur != source) {
-					cur = getVertex(result->tail->data->starting);
+				if (curVertex != source) {
+					curVertex = getVertex(result->tail->data->starting);
 					result->popback();
 				}
 				else break;
 			}
 			else {
-
-				Vertex* oldCur = cur;
-				EoList<Arc*>* tmp = cur->goNextBy->head;
-				while (tmp != NULL) {
-					if (tmp->data->flow == tmp->data->throughput || impossibleVertices->isContain(tmp->data->destination)) tmp = tmp->next;
+				Vertex* oldVertex = curVertex;
+				EoList<Arc*>* tmpArc = curVertex->goNextBy->head;
+				while (tmpArc != NULL) {
+					if (tmpArc->data->flow == tmpArc->data->throughput || impossibleVertices->isContain(tmpArc->data->destination)) tmpArc = tmpArc->next;
 					else {
-						cur = getVertex(tmp->data->destination);
-						result->pushback(tmp->data);
-						impossibleVertices->pushback(tmp->data->destination);
+						curVertex = getVertex(tmpArc->data->destination);
+						result->pushback(tmpArc->data);
+						impossibleVertices->pushback(tmpArc->data->destination);
 						break;
 					}
 				}
-				if (cur == oldCur) {
-					if (cur != source) {
-						cur = getVertex(result->tail->data->starting);
+				if (curVertex == oldVertex) {
+					if (curVertex != source) {
+						curVertex = getVertex(result->tail->data->starting);
 						result->popback();
 					}
 					else break;
@@ -141,22 +140,22 @@ private:
 	}
 
 	void setFlowPath(List<Arc*>* transportPath) {
-		EoList<Arc*>* cur = transportPath->head;
-		unsigned int cmin = cur->data->throughput - cur->data->flow;
-		while (cur != NULL) {
-			if (cur->data->throughput - cur->data->flow < cmin) {
-				cmin = cur->data->throughput - cur->data->flow;
+		EoList<Arc*>* curArc = transportPath->head;
+		unsigned int cmin = curArc->data->throughput - curArc->data->flow;
+		while (curArc != NULL) {
+			if (curArc->data->throughput - curArc->data->flow < cmin) {
+				cmin = curArc->data->throughput - curArc->data->flow;
 			}
-			cur = cur->next;
+			curArc = curArc->next;
 		}
-		cur = transportPath->head;
-		while (cur != NULL) {
-			cur->data->flow += cmin;
-			Vertex* tmpVertex = getVertex(cur->data->destination);
+		curArc = transportPath->head;
+		while (curArc != NULL) {
+			curArc->data->flow += cmin;
+			Vertex* tmpVertex = getVertex(curArc->data->destination);
 			bool check = false;
 			EoList<Arc*>* tmpArc = tmpVertex->goNextBy->head;
 			while (tmpArc != NULL) {
-				if (tmpArc->data->destination == cur->data->starting) {
+				if (tmpArc->data->destination == curArc->data->starting) {
 					tmpArc->data->throughput += cmin;
 					check = true;
 					break;
@@ -164,10 +163,10 @@ private:
 				tmpArc = tmpArc->next;
 			}
 			if (check == false) {
-				Arc* newArc = new Arc(cur->data->destination, cur->data->starting, cmin);
+				Arc* newArc = new Arc(curArc->data->destination, curArc->data->starting, cmin);
 				tmpVertex->goNextBy->pushback(newArc);
 			}
-			cur = cur->next;
+			curArc = curArc->next;
 		}
 	}
 
@@ -177,26 +176,26 @@ public:
 	List<Vertex*>* listVertexes;
 
 	void insertArc(Arc* newArc) {
-		EoList<Vertex*>* cur = listVertexes->head;
-		bool check1 = false;
-		bool check2 = false;
-		while (cur != NULL) {
-			if (check1 == false && cur->data->symbol == newArc->starting) {
-				cur->data->goNextBy->pushback(newArc);
-				check1 = true;
+		EoList<Vertex*>* curVertex = listVertexes->head;
+		bool checkStarting = false;
+		bool checkDestination = false;
+		while (curVertex != NULL) {
+			if (checkStarting == false && curVertex->data->symbol == newArc->starting) {
+				curVertex->data->goNextBy->pushback(newArc);
+				checkStarting = true;
 			}
-			else if (check2 == false && cur->data->symbol == newArc->destination) {
-				check2 = true;
+			else if (checkDestination == false && curVertex->data->symbol == newArc->destination) {
+				checkDestination = true;
 			}
-			else if (check1 == true && check2 == true) break;
-			cur = cur->next;
+			else if (checkStarting == true && checkDestination == true) break;
+			curVertex = curVertex->next;
 		}
-		if (check1 != true) {
+		if (checkStarting != true) {
 			Vertex* newVertex = new Vertex(newArc->starting);
 			newVertex->goNextBy->pushback(newArc);
 			listVertexes->pushback(newVertex);
 		};
-		if (check2 != true) {
+		if (checkDestination != true) {
 			Vertex* newVertex = new Vertex(newArc->destination);
 			listVertexes->pushback(newVertex);
 		}
@@ -208,23 +207,23 @@ public:
 		else {
 			string tmp;
 			while (getline(file, tmp, '\n')) {
-				char v1 = NULL;
-				char v2 = NULL;
-				string value = "";
+				char starting = NULL;
+				char destination = NULL;
+				string throughput = "";
 				for (size_t i = 0; i < tmp.length(); i++) {
-					if (v1 == NULL) {
-						v1 = tmp[i];
+					if (starting == NULL) {
+						starting = tmp[i];
 					}
 					else {
 						if (tmp[i] != ' ') {
-							if (v2 == NULL) {
-								v2 = tmp[i];
+							if (destination == NULL) {
+								destination = tmp[i];
 							}
-							else value += tmp[i];
+							else throughput += tmp[i];
 						}
 					}
 				}
-				Arc* newArc = new Arc(v1, v2, toInt(value));
+				Arc* newArc = new Arc(starting, destination, toInt(throughput));
 				insertArc(newArc);
 			}
 			file.close();
@@ -233,22 +232,21 @@ public:
 	}
 
 	void FordFulkerson() {
-		int i = 1;
-		while (1) {
-			List<Arc*>* transportPath = getTransportPath();
-			if (!transportPath->isEmpty()) setFlowPath(transportPath);
-			else break;
+		List<Arc*>* transportPath = getTransportPath();
+		while (!transportPath->isEmpty()) {
+			setFlowPath(transportPath);
+			transportPath = getTransportPath();
 		}
 	}
 
 	unsigned int maxFlow() {
-		unsigned int max = 0;
-		EoList<Arc*>* cur = source->goNextBy->head;
-		while (cur != NULL) {
-			max += cur->data->flow;
-			cur = cur->next;
+		unsigned int maxFlow = 0;
+		EoList<Arc*>* curArc = source->goNextBy->head;
+		while (curArc != NULL) {
+			maxFlow += curArc->data->flow;
+			curArc = curArc->next;
 		}
-		return max;
+		return maxFlow;
 	}
 	
 	TransportNetwork() {

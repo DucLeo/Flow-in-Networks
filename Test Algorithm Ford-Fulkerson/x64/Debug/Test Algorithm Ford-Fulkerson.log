@@ -1,1 +1,7 @@
-﻿  Test Algorithm Ford-Fulkerson.vcxproj -> C:\Users\GodLu\source\repos\Flows in networks\x64\Debug\Test Algorithm Ford-Fulkerson.exe
+﻿  test.cpp
+C:\Users\GodLu\source\repos\Test Algorithm Ford-Fulkerson\test.cpp(5,1): warning C4003: not enough arguments for function-like macro invocation 'TEST'
+C:\Users\GodLu\source\repos\Test Algorithm Ford-Fulkerson\test.cpp(22,1): warning C4003: not enough arguments for function-like macro invocation 'TEST'
+C:\Users\GodLu\source\repos\Test Algorithm Ford-Fulkerson\test.cpp(41,1): warning C4003: not enough arguments for function-like macro invocation 'TEST'
+C:\Users\GodLu\source\repos\Test Algorithm Ford-Fulkerson\test.cpp(66,1): warning C4003: not enough arguments for function-like macro invocation 'TEST'
+C:\Users\GodLu\source\repos\Test Algorithm Ford-Fulkerson\test.cpp(94,1): warning C4003: not enough arguments for function-like macro invocation 'TEST'
+  Test Algorithm Ford-Fulkerson.vcxproj -> C:\Users\GodLu\source\repos\Flows in networks\x64\Debug\Test Algorithm Ford-Fulkerson.exe

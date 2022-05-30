@@ -6,5 +6,8 @@
     <TestDuration Test="Test_EasyNet." Duration="1" />
     <TestDuration Test="Test_HardNet." Duration="1" />
     <TestDuration Test="Test_MediumNet." Duration="1" />
+    <TestDuration Test="Test_MediumNet1." Duration="1" />
+    <TestDuration Test="Test_MediumNet2." Duration="1" />
+    <TestDuration Test="Test_MediumNet3." Duration="1" />
   </TestDurations>
 </GtaTestDurations>
